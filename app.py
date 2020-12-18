@@ -1,17 +1,16 @@
 import csv 
 from datetime import datetime, timedelta
 
-filename ="results.csv"
-
+INPUT_FILENAME = 'results.csv'
+OUTPUT_FILENAME = 'output.csv'
 INCOMING_DATE_FORMAT = '%Y-%m-%dT%H:%M:%S.%fZ'
 START_COLUMN_NAME = 'created'
 END_COLUMN_NAME = 'updated'
   
-interim_metrics = {}
 average_runtimes = []
 
-with open(filename, 'r') as data: 
-      
+with open(INPUT_FILENAME, 'r') as data: 
+    interim_metrics = {}
     csv_input = csv.DictReader(data)
     data = sorted(csv_input, key=lambda row: (row['created']))
     for line in data: 
@@ -35,7 +34,7 @@ with open(filename, 'r') as data:
     print(average_runtimes)
 
 
-with open('output.csv', 'w', newline='') as csvfile:
+with open(OUTPUT_FILENAME, 'w', newline='') as csvfile:
     csv_output = csv.DictWriter(csvfile, fieldnames=['Week_Commencing', 'Average_Runtime'])
     for row in average_runtimes:
         csv_output.writerow(row)
