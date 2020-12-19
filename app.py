@@ -46,6 +46,24 @@ def build_weekly_report(nit_runtimes_list):
         })
     return weekly_average_report
 
+def build_daily_report(nit_runtimes_list):
+    daily_runtimes_dict = {}
+    for nit_runtime in nit_runtimes_list: 
+        day = datetime.date(nit_runtime["start_time"])
+        runtime = nit_runtime["run_time"]
+        if day in daily_runtimes_dict:
+            daily_runtimes_dict[day].append(runtime)
+        else:
+            daily_runtimes_dict[day] = [runtime]
+    daily_average_report = []
+    for key, value in daily_runtimes_dict.items():
+        day_average = str(sum(value, timedelta()) / len(value))[:10]
+        daily_average_report.append({
+            "Date": key,
+            "Average_Runtime": day_average
+        })
+    return daily_average_report
+
 def write_csv(average_runtimes):
     with open(OUTPUT_FILENAME, 'w', newline='') as csvfile:
         fieldnames = list(average_runtimes[0].keys())
@@ -58,5 +76,6 @@ if __name__ == "__main__":
     
     nit_runtimes_list = import_data(INPUT_FILENAME)
     average_runtimes = build_weekly_report(nit_runtimes_list)
+    #average_runtimes =build_daily_report(nit_runtimes_list)
     print(average_runtimes)
     write_csv(average_runtimes)
