@@ -73,9 +73,23 @@ def write_csv(average_runtimes):
 
 
 if __name__ == "__main__":
-    
     nit_runtimes_list = import_data(INPUT_FILENAME)
-    average_runtimes = build_weekly_report(nit_runtimes_list)
-    #average_runtimes =build_daily_report(nit_runtimes_list)
-    print(average_runtimes)
-    write_csv(average_runtimes)
+    selection = ''
+    while True:
+        print("Which report would you like to create?\n")
+        print("1. Weekly Averages")
+        print("2. Daily Averages")
+        selection = input("\nWhich report? [ 1 / 2 / x to exit ]  ")
+        if selection == '1':
+            average_runtimes = build_weekly_report(nit_runtimes_list)
+            write_csv(average_runtimes)
+            print("\nDone!\n")
+        elif selection == '2':
+            average_runtimes = build_daily_report(nit_runtimes_list)
+            write_csv(average_runtimes)
+            print("\nDone!\n")
+        elif selection.lower() == 'x':
+            break
+        else:
+            print("WTF?\n")
+    
