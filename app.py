@@ -37,22 +37,26 @@ def build_weekly_report(nit_runtimes_list):
             weekly_runtimes_dict[week_commencing].append(runtime)
         else:
             weekly_runtimes_dict[week_commencing] = [runtime]
-    weekly_report = []
+    weekly_average_report = []
     for key, value in weekly_runtimes_dict.items():
-        week_average_runtime = str(sum(value, timedelta()) / len(value))[:10]
-        weekly_report.append({
+        week_average = str(sum(value, timedelta()) / len(value))[:10]
+        weekly_average_report.append({
             "Week_Commencing": key,
-            "Average_Runtime": week_average_runtime
+            "Average_Runtime": week_average
         })
-    return weekly_report
+    return weekly_average_report
+
+def write_csv(average_runtimes):
+    with open(OUTPUT_FILENAME, 'w', newline='') as csvfile:
+        fieldnames = list(average_runtimes[0].keys())
+        csv_output = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        csv_output.writeheader()
+        csv_output.writerows(average_runtimes)
+
 
 if __name__ == "__main__":
     
     nit_runtimes_list = import_data(INPUT_FILENAME)
     average_runtimes = build_weekly_report(nit_runtimes_list)
     print(average_runtimes)
-
-    with open(OUTPUT_FILENAME, 'w', newline='') as csvfile:
-        csv_output = csv.DictWriter(csvfile, fieldnames=['Week_Commencing', 'Average_Runtime'])
-        for row in average_runtimes:
-            csv_output.writerow(row)
+    write_csv(average_runtimes)
